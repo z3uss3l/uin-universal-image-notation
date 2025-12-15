@@ -1,7 +1,7 @@
 # uin-universal-image-notation
-image to textual description compression convention
-# Universal Image Notation (UIN) v0.6 - Vollständige Spezifikation
-*/docs/UINspecificationV06.json*
+Universal Image Notation (UIN) v0.6 Spezifikation
+*/docs
+/UINspecificationSchemaV06.json*
 ## 🎯 Philosophie & Design-Prinzipien
 
 UIN ist eine **präzise, messbare und reversible** Beschreibungssprache für visuelle Inhalte. Jedes Feld ist bewusst gewählt:
@@ -248,3 +248,5 @@ next steps:
 Einfache Integration
 3. Beispiel-Workflows
 In workflows/n8n/ speichern
+-----------------------------
+image to textual description compression convention
