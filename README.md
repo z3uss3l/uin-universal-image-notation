@@ -171,3 +171,15 @@ Probiers aus. Die Zukunft der Bildbeschreibung beginnt jetzt. 🚀
 3. **Setup-Skript ausführen**: `chmod +x setup.sh && ./setup.sh`
 4. **Anwendung starten**: `./start-uin.sh`
 5. **Ersten Roundtrip testen**: Skizze → Kanten → ComfyUI → Ergebnis
+
+*Falls nicht schon gemacht, Fehler  auftreten:*
+# Virtuelle Umgebung erstellen und aktivieren (empfohlen)
+python3 -m venv venv
+source venv/bin/activate  
+# Auf Windows: venv\Scripts\activate
+
+# Abhängigkeiten installieren
+pip install opencv-python pillow numpy
+
+# Skript testen
+python utils/extract_edges.py --help
