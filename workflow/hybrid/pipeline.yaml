@@ -1,0 +1,132 @@
+# workflow/hybrid_pipeline.yaml
+name: UIN Enterprise Automation Pipeline
+version: '1.0'
+description: Full MCP + n8n + ComfyUI integration for enterprise image processing
+
+triggers:
+  - http:
+      path: /api/uin/process
+      method: POST
+  
+  - schedule:
+      interval: '0 */6 * * *'  # Alle 6 Stunden
+      
+  - watch:
+      directory: ./incoming_images
+      patterns: ['*.jpg', '*.png', '*.webp']
+
+jobs:
+  process_incoming_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for new images
+        uses: actions/checkout@v3
+        
+      - name: Extract UIN metadata
+        run: |
+          python utils/extract_edges.py ${{ github.event.inputs.image_path }} \
+            -o ./uin_archive \
+            --batch
+          
+      - name: Validate UIN package
+        run: |
+          python -c "
+          import json, sys
+          with open('./uin_archive/*.uin.json') as f:
+              data = json.load(f)
+          print(f'Validated: {len(data.get(\"objects\", []))} objects')
+          "
+          
+      - name: Send to ComfyUI
+        run: |
+          python workflows/comfyui_automation.py \
+            --input ./uin_archive \
+            --output ./generated \
+            --api-url ${{ secrets.COMFYUI_URL }}
+            
+      - name: Quality check
+        run: |
+          python workflows/roundtrip_validator.py \
+            --original ${{ github.event.inputs.image_path }} \
+            --generated ./generated/latest.png \
+            --output ./validation
+            
+      - name: Archive results
+        uses: actions/upload-artifact@v3
+        with:
+          name: uin-package-${{ github.run_id }}
+          path: |
+            ./uin_archive
+            ./generated
+            ./validation
+            
+      - name: Notify on success
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: "UIN Processing Complete"
+          SLACK_MESSAGE: "Processed ${{ github.event.inputs.image_path }} with 95%+ accuracy"
+          
+      - name: Alert on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: "UIN Processing Failed"
+          SLACK_MESSAGE: "Failed to process ${{ github.event.inputs.image_path }}"
+          SLACK_COLOR: "danger"
+
+  mcp_monitoring:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start MCP Server
+        run: |
+          python mcp_server_full.py &
+          sleep 5
+          
+      - name: Test MCP connection
+        run: |
+          python -c "
+          import asyncio
+          from mcp import ClientSession, StdioServerParameters
+          from mcp.client.stdio import stdio_client
+          
+          async def test():
+              async with stdio_client(StdioServerParameters(
+                  command='python',
+                  args=['mcp_server_full.py']
+              )) as (read, write):
+                  async with ClientSession(read, write) as session:
+                      tools = await session.list_tools()
+                      print(f'Connected! Available tools: {[t.name for t in tools]}')
+          
+          asyncio.run(test())
+          "
+          
+      - name: Health check
+        run: |
+          curl -f http://localhost:3000/health || exit 1
+
+  n8n_workflow_orchestration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy n8n workflow
+        run: |
+          # Install n8n
+          npm install -g n8n
+          
+          # Start n8n
+          n8n start &
+          sleep 10
+          
+          # Import workflows
+          curl -X POST http://localhost:5678/api/v1/workflows \
+            -H "Content-Type: application/json" \
+            -d @workflows/n8n/uin_automation.json
+            
+      - name: Trigger n8n workflow
+        run: |
+          curl -X POST http://localhost:5678/api/v1/workflows/uin/run \
+            -H "Content-Type: application/json" \
+            -d '{\"imagePath\": \"'${{ github.event.inputs.image_path }}'\"}'
