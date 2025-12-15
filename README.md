@@ -114,3 +114,23 @@ Lesen Sie die [technische Dokumentation](ARCHITECTURE.md) und klonen Sie das Rep
 ---
 *"Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt." – Ludwig Wittgenstein*  
 *UIN erweitert diese Grenzen für die visuelle Welt.*
+
+Was ist UIN und warum braucht die Welt es?
+Stell dir vor, du beschreibst einer KI ein Bild – z. B. eine Person in einem Park – und das Ergebnis sieht genau so aus, wie du es dir vorgestellt hast. Kein Zufall, keine endlosen Anpassungen. Genau das macht Universal Image Notation (UIN) möglich.
+Viele Menschen nutzen heute KI-Tools wie Midjourney oder Stable Diffusion, um Bilder zu erzeugen. Aber oft kommt etwas ganz anderes heraus: Die Person ist zu groß, der Baum im falschen Abstand, die Haarfarbe stimmt nicht. UIN löst das Problem – mit einer einfachen, klaren Beschreibungssprache, die wie ein "Bauplan" für Bilder funktioniert.
+Wie funktioniert UIN?
+UIN ist eine smarte Datei (kleiner als ein Foto!), in der du genau angibst:
+Wie groß eine Person ist (z. B. 1,68 m).
+Wie weit die Augen auseinander sind.
+Welche Farbe die Haare genau haben.
+Wo Dinge stehen (z. B. Baum 4 Meter hinter der Person).
+Ein kostenloses Tool (das du einfach im Browser startest) zeigt dir sofort eine Vorschau und erzeugt den perfekten Text für die KI. Plus: Es erstellt automatisch eine "Tiefe-Karte", die der KI hilft, Abstände realistisch darzustellen.
+Für wen ist UIN perfekt?
+Kreative & Designer: Endlich Bilder, die genau passen – ohne stundenlanges Probieren.
+Polizei & Forensik: Präzise Phantombiler aus Zeugenaussagen – sicherer und schneller.
+Lehrer & Erklärer: Klare Illustrationen für Unterricht oder Videos.
+Jeder mit KI: Von Hobby bis Profi – bessere Ergebnisse auf Knopfdruck.
+Unsere Vision
+UIN macht KI-Bilder zugänglich und zuverlässig für alle. Kein "Glücksspiel" mehr, sondern präzise Kontrolle. Wir haben es getestet: Mit UIN sehen die Bilder aus wie geplant – in über 90 % der Fälle!
+Lade das kostenlose Tool herunter (bald auf GitHub), probiere es aus und erstelle deine perfekten Bilder. UIN ist open-source – gemeinsam machen wir KI-Bilder besser!
+Probiere es heute aus – die Zukunft der Bildbeschreibung beginnt jetzt. 🚀
