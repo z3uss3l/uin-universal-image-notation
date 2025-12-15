@@ -13,7 +13,7 @@ Haben Sie schon versucht, einer KI genau zu erklären, welches Bild Sie wollen?
 **Herausforderung**: Worte sind vage. UIN macht sie präzise.
 
 ### ✨ Die UIN-Lösung in 30 Sekunden
-
+*was ist UIN und warum braucht die Welt es?*
 Stellen Sie sich vor, Sie könnten...
 1. **Eine schnelle Skizze malen** (auf Papier, Tablet oder Whiteboard)
 2. **Ein Foto davon machen** und hochladen
@@ -115,8 +115,6 @@ Lesen Sie die [technische Dokumentation](ARCHITECTURE.md) und klonen Sie das Rep
 *"Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt." – Ludwig Wittgenstein*  
 *UIN erweitert diese Grenzen für die visuelle Welt.*
 
-
-*Was ist UIN und warum braucht die Welt es?*
 
 Stell dir vor, du beschreibst einer KI ein Bild – z. B. eine Person in einem Park – und das Ergebnis sieht genau so aus, wie du es dir vorgestellt hast. Kein Zufall, keine endlosen Anpassungen. Genau das hat Universal Image Notation (UIN) vor möglich zu machen. Zumindest so weit, dies eben geht.
 
