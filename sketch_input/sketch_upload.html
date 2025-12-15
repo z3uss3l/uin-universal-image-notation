@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIN v0.6 - Sketch Input</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://docs.opencv.org/4.9.0/opencv.js" async></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 UIN Hybrid Sketch Converter</h1>
+            <p>Lade deine Handskizze hoch → Canny Edges → UIN Capsule</p>
+        </header>
+
+        <div class="workflow">
+            <!-- Step 1: Upload -->
+            <div class="step">
+                <h2>1. Skizze hochladen</h2>
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                    <div class="drop-zone" onclick="document.getElementById('imageInput').click()">
+                        <span>📤 Klicken oder Datei hier ablegen</span>
+                        <p>PNG, JPG, max. 10MB</p>
+                    </div>
+                    <div class="preview-container">
+                        <canvas id="originalCanvas" width="512" height="512"></canvas>
+                        <div class="caption">Original Skizze</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Process -->
+            <div class="step">
+                <h2>2. Canny Parameter</h2>
+                <div class="controls">
+                    <div class="slider-group">
+                        <label for="lowThreshold">Low Threshold: <span id="lowValue">50</span></label>
+                        <input type="range" id="lowThreshold" min="1" max="255" value="50" step="1">
+                    </div>
+                    <div class="slider-group">
+                        <label for="highThreshold">High Threshold: <span id="highValue">150</span></label>
+                        <input type="range" id="highThreshold" min="1" max="255" value="150" step="1">
+                    </div>
+                    <button id="processBtn" onclick="processCanny()">🎯 Canny Edges extrahieren</button>
+                    <button id="autoBtn" onclick="autoDetect()">🤖 Auto-Detect</button>
+                </div>
+                
+                <div class="preview-container">
+                    <canvas id="cannyCanvas" width="512" height="512"></canvas>
+                    <div class="caption">Canny Edges</div>
+                </div>
+            </div>
+
+            <!-- Step 3: UIN Attributes -->
+            <div class="step">
+                <h2>3. UIN Attribute hinzufügen</h2>
+                <div class="attributes">
+                    <div class="form-group">
+                        <label for="prompt">Prompt/Beschreibung:</label>
+                        <textarea id="prompt" rows="3" placeholder="z.B. A serene park at golden hour with a person sitting on a bench under a large oak tree..."></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="lighting">Beleuchtung:</label>
+                            <select id="lighting">
+                                <option value="golden_hour">Goldene Stunde</option>
+                                <option value="overcast">Bewölkt</option>
+                                <option value="sunny">Sonnig</option>
+                                <option value="dramatic">Dramatisch</option>
+                                <option value="studio">Studio</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="style">Stil:</label>
+                            <select id="style">
+                                <option value="photorealistic">Fotorealistisch</option>
+                                <option value="cinematic">Filmisch</option>
+                                <option value="painting">Malerisch</option>
+                                <option value="sketch">Sketch</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="camera">Kamera:</label>
+                            <select id="camera">
+                                <option value="35mm">35mm</option>
+                                <option value="85mm">85mm Porträt</option>
+                                <option value="wide">Weitwinkel</option>
+                                <option value="tele">Teleobjektiv</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Farbpalette (klicke um zu ändern):</label>
+                        <div class="palette" id="palette">
+                            <div class="color" style="background-color: #4A6572" onclick="changeColor(this)" data-color="#4A6572"></div>
+                            <div class="color" style="background-color: #F9AA33" onclick="changeColor(this)" data-color="#F9AA33"></div>
+                            <div class="color" style="background-color: #232F34" onclick="changeColor(this)" data-color="#232F34"></div>
+                            <div class="color" style="background-color: #5D8CAE" onclick="changeColor(this)" data-color="#5D8CAE"></div>
+                            <div class="color" style="background-color: #669966" onclick="changeColor(this)" data-color="#669966"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="negativePrompt">Negative Prompt:</label>
+                        <input type="text" id="negativePrompt" placeholder="z.B. blurry, distorted, ugly">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Export -->
+            <div class="step">
+                <h2>4. Export UIN Capsule</h2>
+                <div class="export-options">
+                    <button onclick="exportUIN()" class="export-btn">📦 UIN Capsule erstellen (.uin)</button>
+                    <button onclick="exportPNG()" class="export-btn">🖼️ Nur Canny Map (.png)</button>
+                    <button onclick="exportJSON()" class="export-btn">📝 Nur JSON (.json)</button>
+                </div>
+                
+                <div class="preview-code">
+                    <h3>Vorschau UIN Capsule:</h3>
+                    <pre id="jsonPreview"><code>{"format": "uin-capsule-v1", "edges": "...", "attributes": {...}}</code></pre>
+                </div>
+                
+                <div id="downloadLinks"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>UIN v0.6 Hybrid Mode | <a href="#" onclick="loadExample()">Beispiel laden</a></p>
+        </footer>
+    </div>
+
+    <script src="canny_processor.js"></script>
+    <script src="export_uin.js"></script>
+</body>
+</html>
