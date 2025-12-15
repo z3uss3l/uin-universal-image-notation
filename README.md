@@ -122,31 +122,37 @@ Stell dir vor, du beschreibst einer KI ein Bild – z. B. eine Person in einem P
 
 Viele Menschen nutzen heute KI-Tools wie Midjourney oder Stable Diffusion, um Bilder zu erzeugen. Aber oft kommt etwas komplett ganz anderes heraus: Die Person ist zu groß, der Baum im falschen Abstand, die Haarfarbe stimmt nicht. UIN löst das Problem mit einer einfachen, klaren Beschreibungssprache, die wie ein "Bauplan" für Bilder funktioniert.
 
-*Wie funktioniert UIN?*
-UIN ist eine smarte Datei (kleiner als ein Foto!), in der du genau angibst:
+**Wie funktioniert UIN?**
+*UIN ist eine smarte Datei (kleiner als ein Foto!), in der du genau angibst:*
 Wie groß eine Person ist (z. B. 1,68 m).
 Wie weit die Augen auseinander sind.
 Welche Farbe die Haare genau haben.
-Wo Dinge stehen (z. B. Baum 4 Meter hinter der Person).
+Wo Dinge stehen (z.B. Baum, 4 Meter hinter der Person).
 
-Ein kostenloses Tool (das du einfach im Browser startest) zeigt dir sofort eine Vorschau und erzeugt den perfekten Text für die KI.
+Ein kostenloses Tool (das du einfach im Browser startest) zeigt dir eine Vorschau und erzeugt perfekten Text für KI.
 
 Plus: Es erstellt automatisch eine "Tiefe-Karte", die der KI hilft, Abstände realistisch darzustellen.
 
-Für wen ist UIN hilfreich?
+**Für wen ist UIN hilfreich?**
+
 *Kreative & Designer:*
 Endlich Bilder, die genau passen – ohne stundenlanges Probieren.
+
 *Polizei & Forensik:*
 Präzise Phantombiler aus Zeugenaussagen – sicherer und schneller.
+
 *Lehrer & Erklärer:*
 Klare Illustrationen für Unterricht oder Videos.
+
 *Ein Jeder mit KI:*
 Von Hobby bis Profi bessere Ergebnisse auf Knopfdruck.
 
 *Die Vision:*
 UIN macht KI-Bilder zugänglich und zuverlässig für alle.
+
 *Ziel:*
 kein "Glücksspiel" mehr, sondern präzise Kontrolle.
+
 *Aktueller Stand:*
 mit UIN sehen die Bilder aus wie geplant gefühlt in über 90% der Fälle! 
 
@@ -154,7 +160,7 @@ Machst das besser? Metrik ist, ein Originalbild wiederzutreffen: bring deine Opt
 
 Lad das kostenlose Tool herunter, teste aus und erstell deine Pics. 
 
-*open-source*
+**open-source**
 gemeinsam machen wirs besser!
 
 Probiers aus. Die Zukunft der Bildbeschreibung beginnt jetzt. 🚀
