@@ -1,0 +1,12 @@
+{
+  "nodes": [
+    {
+      "name": "UIN Edge Extraction",
+      "type": "n8n-nodes-base.executeCommand",
+      "parameters": {
+        "command": "python utils/extract_edges.py {{ $json.image_path }}",
+        "options": {}
+      }
+    }
+  ]
+}
