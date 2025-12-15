@@ -189,3 +189,36 @@ python utils/extract_edges.py --help
 2. Klone das Repository: `git clone https://github.com/z3uss3l/uin-universal-image-notation.git`
 3. Führe das Setup-Skript aus: Doppelklick auf **`setup.bat`**
 4. Starte UIN mit: Doppelklick auf **`start_uin.bat`**
+
+MCP / N8N
+
+```
+
+🔌 n8n-Workflow-Beispiele (praktische Anwendung)
+
+Workflow 1: Automatische Bildanalyse-Pipeline
+
+```
+[Datei-Upload] → [UIN: Extract Edges] → [ChatGPT: Analyse JSON] → [Datenbank: Speichern] → [Email: Report senden]
+```
+
+Workflow 2: KI-Bild-Generierung mit Qualitätskontrolle
+
+```
+[Formular: UIN-Eingabe] → [UIN: Generate Prompt] → [Stable Diffusion API] → [UIN: Compare with Original] → [Slack: Ergebnis teilen]
+```
+
+📊 Aktueller Status & Prioritäten
+✅ Bereits vorhanden (direkt nutzbar):
+
+1. Strukturierte JSON API
+MCP-Tool-Definitionen
+2. CLI-Tools (extract_edges.py) - Direkt in n8n integrierbar via exec
+3. Komplette Logik für Vorwärts/Rückwärts-Konvertierung
+
+next steps:
+1. Minimaler MCP-Server mcp_server.py
+2. n8n-Custom-Node
+Einfache Integration
+3. Beispiel-Workflows
+In workflows/n8n/ speichern
