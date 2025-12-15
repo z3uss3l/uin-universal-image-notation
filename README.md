@@ -1,5 +1,33 @@
 # uin-universal-image-notation
 image to textual description compression convention
+# Universal Image Notation (UIN) v0.6 - Vollständige Spezifikation
+*/docs/UINspecificationV06.json*
+## 🎯 Philosophie & Design-Prinzipien
+
+UIN ist eine **präzise, messbare und reversible** Beschreibungssprache für visuelle Inhalte. Jedes Feld ist bewusst gewählt:
+
+1. **Quantifizierbar statt qualitativ**: Statt "große Nase" → `"nasal_index": 1.2`
+2. **Maschinen- & menschenlesbar**: Strukturierte JSON für Automatisierung, klare Namen für Menschen
+3. **Domänenübergreifend**: Forensik, KI-Generierung, Archivierung, CAD
+4. **Erweiterbar durch `features` & `metadata`**: Feste Struktur + flexible Erweiterung
+
+## 📐 Kernkonzepte
+
+### 1. Das Koordinatensystem
+UIN verwendet ein **rechtshändiges 3D-Koordinatensystem**:
+- **X**: Rechts (positiv) / Links (negativ)
+- **Y**: Oben (positiv) / Unten (negativ)  
+- **Z**: Vorne (positiv) / Hinten (negativ)
+
+Standard: **Meter als Einheit** (`world_space_meters`). Für 2D-Projektionen wird Z für Tiefe genutzt.
+
+### 2. Anchors (Referenzpunkte)
+Objekte haben definierte Ankerpunkte für präzise Positionierung:
+```json
+"position": {
+  "x": 1.5, "y": 0, "z": 2.0,
+  "anchor": "feet"  // Bei Personen: Fußpunkt statt Mittelpunkt
+}
 
 # UIN: Ihre Skizze + KI = Perfektes Bild
 ## Warum UIN die Bildkommunikation revolutioniert
