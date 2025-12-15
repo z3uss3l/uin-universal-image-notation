@@ -183,3 +183,9 @@ pip install opencv-python pillow numpy
 
 # Skript testen
 python utils/extract_edges.py --help
+
+## 🪟 Windows Installation
+1. Stelle sicher, dass [Node.js](https://nodejs.org) und [Python 3.8+](https://python.org) installiert sind.
+2. Klone das Repository: `git clone https://github.com/z3uss3l/uin-universal-image-notation.git`
+3. Führe das Setup-Skript aus: Doppelklick auf **`setup.bat`**
+4. Starte UIN mit: Doppelklick auf **`start_uin.bat`**
