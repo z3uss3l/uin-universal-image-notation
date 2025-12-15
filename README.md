@@ -41,8 +41,8 @@ Stellen Sie sich vor, Sie könnten...
 
 #### 👤 **Jeder mit einer Idee**
 - **Persönliche Projekte**: Visualisieren Sie Ihr Traumhaus, Ihr Buchcover, Ihr Tattoo.
-- **Kommunikation**: Zeigen Sie, was Sie meinen, nicht beschreiben Sie es nur.
-- **Erinnerungen**: Bewahren Sie Fotos in einer komprimierten, aber rekonstruierbaren Form auf.
+- **Kommunikation**: Zeigen Sie, was Sie meinen, beschreiben Sie es nicht nur.
+- **Erinnerungen**: Bewahren Sie Fotos in einer komprimierten, leicht verschlüsselten, aber easy rekonstruierbaren Form auf.
 
 ### 🔄 Die zwei magischen Arbeitsweisen
 
