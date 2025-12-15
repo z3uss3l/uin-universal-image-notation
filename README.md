@@ -28,7 +28,7 @@ Objekte haben definierte Ankerpunkte für präzise Positionierung:
   "x": 1.5, "y": 0, "z": 2.0,
   "anchor": "feet"  // Bei Personen: Fußpunkt statt Mittelpunkt
 }
-
+```
 # UIN: Ihre Skizze + KI = Perfektes Bild
 ## Warum UIN die Bildkommunikation revolutioniert
 
