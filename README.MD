@@ -46,6 +46,23 @@ UIN ist die **Sprache**.
 👉 Siehe [uin-ngin](https://github.com/z3uss3l/uin-ngin) für die technische Engine.
 
 ---
+---
+
+## 🧪 Technische Spezifikation v0.7
+
+Die aktuelle Spezifikation ist im Repository unter `/docs/UINspecificationSchemaV07.json` verfügbar.  
+Sie definiert alle Felder, Typen und Validierungsregeln für UIN‑Dateien.
+
+### Validierung
+```bash
+# Schema validieren
+python validators/schema_validator.py your_file.uin.json
+
+# Domänenspezifische Prüfung
+python validators/domain_validator.py --domain gaming avatar.uin.json
+
+# Komplette Testsuite
+pytest tests/ -v
 
 ## 🚀 Erste Schritte
 - Lesen Sie die Spezifikation (`/docs/UINspecificationSchemaV06.json`).  
@@ -55,6 +72,6 @@ UIN ist die **Sprache**.
 ---
 
 ## 📈 Roadmap
-- v0.7: ISO/IEC 19794-5 konforme biometrische Standards.  
+- v0.7: ISO/IEC 19794-5 konforme biometrische Standards.  ✓ (steht)
 - Cross-Domain-Kompatibilität (CAD, DICOM, Geospatial).  
 - Gaming/Avatare (VRM, Unreal Engine, Ready Player Me).
