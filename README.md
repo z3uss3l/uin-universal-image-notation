@@ -249,7 +249,11 @@ Einfache Integration
 3. Beispiel-Workflows
 In workflows/n8n/ speichern
 -----------------------------
-Snippets: uin to unreal avatar
+Snippets: 
+
+
+
+uin to unreal avatar
 ```
 image to textual description compression convention
 def uin_to_unreal_avatar(uin_data):
@@ -271,3 +275,26 @@ def uin_to_unreal_avatar(uin_data):
             })
     
     return avatar_config
+
+```
+uin to Cyberpunk Avatar
+```
+{
+  "version": "0.7",
+  "objects": [{
+    "id": "cyberpunk_runner",
+    "type": "human",
+    "avatar_attributes": {
+      "body_type": "mesomorph",
+      "cosmetic_modifications": [{
+        "type": "cyberware",
+        "location": "left_arm",
+        "glowing": true
+      }]
+    }
+  }],
+  "cross_domain_mappings": {
+    "gaming_standards": { "vrm_compatible": true }
+  }
+}
+```
