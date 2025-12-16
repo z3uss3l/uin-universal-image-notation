@@ -10,6 +10,15 @@ UIN ist eine **präzise, messbare und reversible** Beschreibungssprache für vis
 2. **Maschinen- & menschenlesbar**: Strukturierte JSON für Automatisierung, klare Namen für Menschen
 3. **Domänenübergreifend**: Forensik, KI-Generierung, Archivierung, CAD
 4. **Erweiterbar durch `features` & `metadata`**: Feste Struktur + flexible Erweiterung
+   
+*(ab v07: Biometrische &
+   Forensische Standards
+   **ISO/IEC 19794-5 konform**:
+   Gesichtslandmarken in
+   Millimetergenauigkeit
+   **Datenschutz by Design**:
+   Verschlüsselungs-Flags für
+   biometrische Daten)*
 
 ## 📐 Kernkonzepte
 
@@ -249,9 +258,46 @@ Einfache Integration
 3. Beispiel-Workflows
 In workflows/n8n/ speichern
 -----------------------------
+
+## 🎯 Neu in v0.7
+
+### 🎮 Gaming & Avatar-Systeme
+- **Standardisierte Avatar-Attribute**: `body_type` (ectomorph/mesomorph/endomorph), proportionale Gesichtsmerkmale
+- **Cybernetic Mods**: Cyberware-Implantate, leuchtende Tattoos, prothetische Erweiterungen
+- **Engine-Kompatibilität**: VRM, Unreal Engine Metahuman, Ready Player Me
+- **Stylized Proportions**: Anime-Stil-Level, übertriebene Merkmale für Charakterdesign
+
+### 🔬 Biometrische & Forensische Standards
+- **ISO/IEC 19794-5 konform**: Gesichtslandmarken in Millimetergenauigkeit
+- **Datenschutz by Design**: Verschlüsselungs-Flags für biometrische Daten
+- **Forensische Merkmalskataloge**: Narbe, Muttermal, Tattoo-Dokumentation
+- **Demografische Schätzungen**: Alter, Geschlecht, Abstammungskomponenten
+
+### 🔗 Cross-Domain Kompatibilität
+- **CAD-Formate**: STEP, IGES, STL Export (via Converter)
+- **Medizinische Bildgebung**: DICOM-Tag-Mapping für CT/MRI
+- **Geospatial**: EPSG-Koordinatensysteme für Geländedaten
+- **Industriestandards**: Austausch mit PLM/PDM-Systemen
+
+### ⚡ Performance & Real-Time
+- **Level-of-Detail-System**: Full → Simplified → Bounding-Box
+- **Echtzeit-Optimierung**: Mobile-Optimized Flags, Occlusion Culling
+- **Streaming-fähig**: Progressive Details bei Bedarf
+
+## 🧪 Technische Spezifikation
+
+### Validierungssuite
+```bash
+# Schema validieren
+python validators/schema_validator.py your_file.uin.json
+
+# Domänenspezifische Prüfung
+python validators/domain_validator.py --domain gaming avatar.uin.json
+
+# Komplette Testsuite
+pytest tests/ -v
+```
 Snippets: 
-
-
 
 uin to unreal avatar
 ```
