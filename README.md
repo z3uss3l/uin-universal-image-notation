@@ -297,8 +297,32 @@ python validators/domain_validator.py --domain gaming avatar.uin.json
 # Komplette Testsuite
 pytest tests/ -v
 ```
-Snippets: 
+**Snippets: **
 
+UIN to Biometrische Daten ISO 
+```
+def uin_to_iso_19794(uin_data):
+    iso_template = {
+        "format_identifier": "ISO19794_5",
+        "version": "2011",
+        "biometric_data_blocks": [{
+            "header": {"biometric_type": "FACE"},
+            "facial_information": {
+                "facial_points": extract_landmarks(uin_data["biometric_data"]),
+                "gender": uin_data["demographics"]["biological_sex"],
+                "age": uin_data["demographics"]["age_estimate"]["value"]
+            }
+        }]
+    }
+    
+ if uin_data["biometric_data"].get("iris_pattern"):
+        iso_template["biometric_data_blocks"].append({
+            "header": {"biometric_type": "IRIS"},
+            "iris_data": uin_data["biometric_data"]["iris_pattern"]
+        })
+    
+    return iso_template
+```
 uin to unreal avatar
 ```
 image to textual description compression convention
