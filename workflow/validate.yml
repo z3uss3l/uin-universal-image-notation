@@ -1,0 +1,15 @@
+# .github/workflow/validate.yml
+name: UIN Validation
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Schema Validation
+        run: python validators/schema_validator.py --all
+      - name: Domain-specific Validation
+        run: python validators/domain_validator.py --domain all
+      - name: Generate Test Images
+        run: python tests/generate_test_images.py
