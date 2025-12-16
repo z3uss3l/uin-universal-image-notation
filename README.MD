@@ -116,11 +116,98 @@ Für Kreative & Neugierige:
 
 ---
 
-🧪 **Technische Spezifikation v0.7**
+🧪 **Technische Spezifikation v0.8**
 
-Die aktuelle Spezifikation ist im Repository unter `/docs/UINspecificationSchemaV07.json` verfügbar.  
+Die aktuelle Spezifikation ist im Repository unter `/docs/UINspecificationSchemaV08.json` verfügbar.  
 Sie definiert alle Felder, Typen und Validierungsregeln für UIN‑Dateien.
+ Universal Image Notation (UIN) v0.8 – Technische Spezifikation   body { font-family: system-ui, sans-serif; background: #0f1220; color: #e6e9ff; margin: 0; } header { padding: 32px 24px; border-bottom: 1px solid #242844; } h1 { margin: 0 0 8px; font-size: 28px; } header p { margin: 0; color: #a9b0d9; } main { padding: 24px; max-width: 1000px; margin: 0 auto; } section { background: #171a2b; border: 1px solid #242844; border-radius: 12px; padding: 20px; margin-bottom: 18px; } h2 { font-size: 20px; margin: 0 0 12px; } pre { background: #0b0e1a; border: 1px solid #22263f; border-radius: 10px; padding: 14px; overflow: auto; font-family: monospace; } footer { color: #a9b0d9; text-align: center; padding: 24px; border-top: 1px solid #242844; }
 
+Universal Image Notation (UIN) v0.8 – Technische Spezifikation
+==============================================================
+
+Formal, vollständig und validierbar. Fokus: Sprache/Notation, nicht Engine.
+
+1\. Scope
+---------
+
+Diese Spezifikation definiert die Universal Image Notation (UIN) Version 0.8. Neu sind optionale Erweiterungen für **MCP‑Verträge** und **Workflow‑Hooks**.
+
+2\. Normative Verweise
+----------------------
+
+*   JSON Schema Draft‑07
+*   ISO/IEC 19794‑5:2011 – Biometrische Datenformate
+*   DICOM Standard – Medizinische Bildgebung
+*   EPSG Codes – Geospatial Koordinatensysteme
+
+3\. Modellübersicht (UML‑ähnlich)
+---------------------------------
+
+    UIN v0.8
+     ├─ version : "0.8"
+     ├─ metadata : { title, description, author, created, tags, document_hash, conformance }
+     ├─ canvas : { aspect_ratio, bounds[x,y,z], coordinate_system }
+     ├─ global : { lighting, style }
+     ├─ objects[] : Object {...}
+     ├─ relations[] : {...}
+     ├─ edge_reference : {...}
+     ├─ cross_domain_mappings : {...}
+     ├─ compatibility : { ai_models[] }
+     ├─ mcp_contracts : { contexts[], capability_negotiation }
+     └─ workflow_hooks : { triggers[], nodes[], edges[] }
+    
+
+4\. Validierung
+---------------
+
+    python validators/schema_validator.py your_file.uin.json docs/UINspecificationSchemaV08.json
+    python validators/conformance_validator.py your_file.uin.json
+    python validators/workflow_io_validator.py your_file.uin.json
+    python validators/mcp_validator.py your_file.uin.json
+    
+
+5\. Beispiel
+------------
+
+    {
+      "version": "0.8",
+      "metadata": {
+        "title": "Beispiel UIN v0.8",
+        "conformance": "UIN-Full-0.8",
+        "document_hash": "sha256:..."
+      },
+      "canvas": {
+        "aspect_ratio": "16:9",
+        "bounds": {"x":[0,1],"y":[0,1],"z":[0,1]},
+        "coordinate_system": "normalized_0_1"
+      },
+      "objects": [
+        { "id": "person1", "type": "human", "position": {"x":0.5,"y":0.1,"z":0.0} }
+      ],
+      "mcp_contracts": {
+        "contexts": [
+          { "id": "default", "capabilities": ["render"], "constraints": {"max_runtime_ms": 5000} }
+        ]
+      },
+      "workflow_hooks": {
+        "triggers": [ { "id": "t1", "type": "on_render_complete" } ],
+        "nodes": [
+          {
+            "id": "n1",
+            "kind": "webhook",
+            "io": {
+              "inputs": [{"name":"result","type":"json"}],
+              "outputs": [{"name":"ack","type":"json"}]
+            },
+            "security": {"requires_auth": true, "auth_type": "api_key"}
+          }
+        ],
+        "edges": [ { "from": "t1", "to": "n1" } ]
+      }
+    }
+    
+
+UIN v0.8 – Technische Spezifikation • © 2025
 ### Validierung
 ```bash
 # Schema validieren
