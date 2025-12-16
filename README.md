@@ -241,7 +241,7 @@ Workflow 2: KI-Bild-Generierung mit Qualitätskontrolle
 MCP-Tool-Definitionen
 2. CLI-Tools (extract_edges.py) - Direkt in n8n integrierbar via exec
 3. Komplette Logik für Vorwärts/Rückwärts-Konvertierung
-
+```
 next steps:
 1. Minimaler MCP-Server mcp_server.py
 2. n8n-Custom-Node
@@ -249,4 +249,25 @@ Einfache Integration
 3. Beispiel-Workflows
 In workflows/n8n/ speichern
 -----------------------------
+Snippets: uin to unreal avatar
+```
 image to textual description compression convention
+def uin_to_unreal_avatar(uin_data):
+    avatar_config = {
+        "metahuman_preset": map_body_type(uin_data["avatar_attributes"]["body_type"]),
+        "facial_features": {
+            "eye_size": uin_data["avatar_attributes"]["facial_features"]["eye_size"],
+            "jaw_strength": uin_data["avatar_attributes"]["facial_features"]["jaw_strength"]
+        },
+        "cosmetics": []
+    }
+    
+    for mod in uin_data["avatar_attributes"]["cosmetic_modifications"]:
+        if mod["type"] == "cyberware":
+            avatar_config["cosmetics"].append({
+                "type": "attachment",
+                "socket": map_location(mod["location"]),
+                "asset": "Cyberware/" + mod["style"]
+            })
+    
+    return avatar_config
