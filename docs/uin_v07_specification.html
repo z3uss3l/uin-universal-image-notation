@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <title>Universal Image Notation (UIN) v0.7 – Technische Spezifikation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Technische Spezifikation der Universal Image Notation (UIN) v0.7 – formal, vollständig und validierbar." />
+  <style>
+    :root {
+      --bg: #0f1220;
+      --panel: #171a2b;
+      --text: #e6e9ff;
+      --muted: #a9b0d9;
+      --accent: #7aa2ff;
+      --green: #64d38c;
+      --red: #ff6b6b;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    html, body { background: var(--bg); color: var(--text); margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Noto Color Emoji", sans-serif; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { padding: 32px 24px; border-bottom: 1px solid #242844; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    header p { margin: 0; color: var(--muted); }
+    main { padding: 24px; max-width: 1000px; margin: 0 auto; }
+    section { background: var(--panel); border: 1px solid #242844; border-radius: 12px; padding: 20px; margin-bottom: 18px; }
+    h2 { font-size: 20px; margin: 0 0 12px; }
+    h3 { font-size: 17px; margin: 18px 0 8px; }
+    ul { margin: 8px 0 0 18px; }
+    code, pre { font-family: var(--mono); }
+    pre { background: #0b0e1a; border: 1px solid #22263f; border-radius: 10px; padding: 14px; overflow: auto; }
+    .toc ol { margin: 8px 0 0 18px; }
+    .kv { display: grid; grid-template-columns: 220px 1fr; gap: 8px 12px; }
+    .kv div { padding: 6px 10px; background: #121527; border: 1px solid #22263f; border-radius: 8px; }
+    .label { color: var(--muted); }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; background: #121527; border: 1px solid #22263f; color: var(--muted); font-size: 12px; margin-left: 6px; }
+    details { border: 1px dashed #2c3154; border-radius: 10px; padding: 12px; background: #11142a; }
+    summary { cursor: pointer; color: var(--accent); }
+    footer { color: var(--muted); text-align: center; padding: 24px; border-top: 1px solid #242844; }
+    .note { color: var(--muted); font-size: 14px; }
+    .ok { color: var(--green); }
+    .warn { color: var(--red); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Universal Image Notation (UIN) v0.7 – Technische Spezifikation</h1>
+    <p>Formal, vollständig und validierbar. Fokus: Sprache/Notation, nicht Engine.</p>
+  </header>
+
+  <main>
+    <section class="toc">
+      <h2>Inhaltsverzeichnis</h2>
+      <ol>
+        <li>Scope</li>
+        <li>Normative Verweise</li>
+        <li>Begriffe & Definitionen</li>
+        <li>Modellübersicht (UML‑ähnlich)</li>
+        <li>Datenstrukturen</li>
+        <li>Validierung</li>
+        <li>ISO‑Integration</li>
+        <li>Cross‑Domain Kompatibilität</li>
+        <li>Kompatibilität mit KI‑Modellen</li>
+        <li>Konformität</li>
+        <li>Schema v0.7 (vollständig)</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>1. Scope</h2>
+      <p>Diese Spezifikation definiert die Universal Image Notation (UIN) Version 0.7. UIN beschreibt visuelle Inhalte präzise, messbar und reversibel für Forensik, Gaming/Avatare, KI‑Bildgenerierung, Archivierung sowie CAD/Industrie.</p>
+    </section>
+
+    <section>
+      <h2>2. Normative Verweise</h2>
+      <ul>
+        <li><strong>JSON Schema Draft‑07:</strong> http://json-schema.org/draft-07/schema#</li>
+        <li><strong>ISO/IEC 19794‑5:2011:</strong> Biometrische Datenformate (Gesichtslandmarken)</li>
+        <li><strong>DICOM:</strong> Standard für medizinische Bildgebung</li>
+        <li><strong>EPSG:</strong> Geospatial Koordinatensysteme</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. Begriffe & Definitionen</h2>
+      <ul>
+        <li><strong>Canvas:</strong> globaler Bildraum mit Bounds und Koordinatensystem.</li>
+        <li><strong>Object:</strong> visuelles Element mit Position, Rotation, Features.</li>
+        <li><strong>Measurement:</strong> quantifizierte Eigenschaft mit Wert, Einheit, Toleranz.</li>
+        <li><strong>Relation:</strong> Beziehung zwischen Objekten (Abstand, Winkel, Relativposition).</li>
+        <li><strong>Cross‑Domain Mapping:</strong> Zuordnung zu externen Standards (Gaming, Biometrie, CAD).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. Modellübersicht (UML‑ähnlich)</h2>
+      <pre><code>UIN
+ ├─ version : string ("0.7")
+ ├─ metadata : { title, description, author, created, tags }
+ ├─ canvas : { aspect_ratio, bounds[x,y,z], coordinate_system }
+ ├─ global : { lighting, style }
+ ├─ objects[] : Object
+ │    ├─ id, type, subtype
+ │    ├─ position {x,y,z,anchor}
+ │    ├─ rotation {x,y,z}
+ │    ├─ measurements {…}
+ │    ├─ features {color, material, texture}
+ │    ├─ forensic_attributes {face_shape, interpupillary_distance_mm, unique_marks[]}
+ │    ├─ avatar_attributes {body_type, facial_features, cosmetic_modifications[]}
+ │    ├─ biometric_data {facial_landmarks, demographic_estimates, privacy_flags}
+ │    └─ state {expression, action}
+ ├─ relations[] : {type, from, to, value, unit}
+ ├─ edge_reference : {use_as_control, file_name, canny_thresholds}
+ ├─ cross_domain_mappings : {gaming_standards, biometric_standards}
+ └─ compatibility : {ai_models[]}
+</code></pre>
+      <p class="note">Hinweis: Die strukturelle Darstellung ist schematisch; verbindlich ist das JSON‑Schema in Abschnitt 11.</p>
+    </section>
+
+    <section>
+      <h2>5. Datenstrukturen</h2>
+      <h3>5.1 Vector3</h3>
+      <div class="kv">
+        <div class="label">x</div><div>number</div>
+        <div class="label">y</div><div>number</div>
+        <div class="label">z</div><div>number</div>
+      </div>
+
+      <h3>5.2 Measurement</h3>
+      <div class="kv">
+        <div class="label">value</div><div>number, min 0</div>
+        <div class="label">unit</div><div>enum {"mm","cm","m","px","%","ratio"}</div>
+        <div class="label">tolerance</div><div>number, min 0 (optional)</div>
+      </div>
+
+      <h3>5.3 Color</h3>
+      <ul>
+        <li><strong>Hex:</strong> <code>#RRGGBB</code> oder <code>#RRGGBBAA</code></li>
+        <li><strong>Objekt:</strong> <code>{ rgb[3..4], hsl[3], name }</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>6. Validierung</h2>
+      <h3>6.1 Schema‑Validierung</h3>
+      <pre><code>python validators/schema_validator.py your_file.uin.json
+</code></pre>
+      <h3>6.2 Domänenspezifische Prüfung</h3>
+      <pre><code>python validators/domain_validator.py --domain gaming avatar.uin.json
+</code></pre>
+      <h3>6.3 Testsuite</h3>
+      <pre><code>pytest tests/ -v
+</code></pre>
+      <p class="note">Konforme UIN‑Dateien müssen die Schema‑Validierung bestehen und alle Pflichtfelder enthalten.</p>
+    </section>
+
+    <section>
+      <h2>7. ISO‑Integration</h2>
+      <ul>
+        <li><strong>Gesichtslandmarken:</strong> z. B. pupillary_distance_mm, bizygomatic_width_mm.</li>
+        <li><strong>Biometrische Datenblöcke:</strong> Gesicht, Iris, optionale Erweiterungen.</li>
+        <li><strong>Demografische Schätzungen:</strong> biological_sex, age_estimate.</li>
+        <li><strong>Privacy Flags:</strong> <code>encryption_required</code> (Default: true).</li>
+      </ul>
+      <p class="note">Die Felder sind kompatibel zur Modellierung gemäß ISO/IEC 19794‑5.</p>
+    </section>
+
+    <section>
+      <h2>8. Cross‑Domain Kompatibilität</h2>
+      <ul>
+        <li><strong>Gaming:</strong> VRM‑Kompatibilität, Unreal Metahuman.</li>
+        <li><strong>Industrie:</strong> CAD‑Formate (STEP, IGES, STL) via Converter.</li>
+        <li><strong>Medizin:</strong> DICOM‑Tag‑Mapping für CT/MRI.</li>
+        <li><strong>Geospatial:</strong> EPSG‑Koordinatensysteme für Geländedaten.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>9. Kompatibilität mit KI‑Modellen</h2>
+      <p>Standardmäßig kompatibel mit: Stable Diffusion, DALL‑E, Midjourney, Flux.</p>
+    </section>
+
+    <section>
+      <h2>10. Konformität</h2>
+      <ul>
+        <li><strong>Version:</strong> <code>version = "0.7"</code> muss gesetzt sein.</li>
+        <li><strong>Pflichtfelder:</strong> <code>canvas</code> und mindestens ein Eintrag in <code>objects[]</code>.</li>
+        <li><strong>Validierung:</strong> JSON‑Schema‑Validierung muss erfolgreich sein.</li>
+      </ul>
+      <p class="ok">Status: konform, wenn alle Kriterien erfüllt.</p>
+    </section>
+
+    <section>
+      <h2>11. Schema v0.7 (vollständig)</h2>
+      <details>
+        <summary>JSON‑Schema anzeigen (v0.7)</summary>
+        <pre><code>{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/z3uss3l/uin-universal-image-notation/schemas/v0.7.json",
+  "title": "Universal Image Notation (UIN) v0.7",
+  "description": "Standardisierte Bildbeschreibung für Forensik, Gaming-Avatare, Biometrie und KI-Generierung",
+  "type": "object",
+  "required": ["version", "canvas", "objects"],
+  "definitions": {
+    "vector3": {
+      "type": "object",
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number", "minimum": 0 },
+        "unit": { "type": "string", "enum": ["mm", "cm", "m", "px", "%", "ratio"] },
+        "tolerance": { "type": "number", "minimum": 0 }
+      }
+    },
+    "color": {
+      "oneOf": [
+        { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$" },
+        {
+          "type": "object",
+          "properties": {
+            "rgb": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 4 },
+            "hsl": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+            "name": { "type": "string" }
+          }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "version": { "type": "string", "const": "0.7" },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "author": { "type": "string" },
+        "created": { "type": "string", "format": "date-time" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "canvas": {
+      "type": "object",
+      "required": ["aspect_ratio", "bounds"],
+      "properties": {
+        "aspect_ratio": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" },
+        "bounds": {
+          "type": "object",
+          "required": ["x", "y", "z"],
+          "properties": {
+            "x": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+            "y": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+            "z": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
+          }
+        },
+        "coordinate_system": {
+          "type": "string",
+          "enum": ["world_space_meters", "normalized_0_1", "pixel_absolute"],
+          "default": "world_space_meters"
+        }
+      }
+    },
+    "global": {
+      "type": "object",
+      "properties": {
+        "lighting": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "enum": ["studio", "golden_hour", "overcast", "night"] },
+            "intensity": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "style": {
+          "type": "object",
+          "properties": {
+            "genre": { "type": "string", "enum": ["photorealistic", "painting", "cyberpunk", "anime"] }
+          }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "position"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+          "type": { "type": "string" },
+          "subtype": { "type": "string" },
+          "position": {
+            "type": "object",
+            "required": ["x", "y", "z"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "z": { "type": "number" },
+              "anchor": {
+                "type": "string",
+                "enum": ["center", "feet", "head", "top_left"],
+                "default": "center"
+              }
+            }
+          },
+          "rotation": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number", "minimum": -180, "maximum": 180 },
+              "y": { "type": "number", "minimum": -180, "maximum": 180 },
+              "z": { "type": "number", "minimum": -180, "maximum": 180 }
+            }
+          },
+          "measurements": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/definitions/measurement" }
+          },
+          "features": {
+            "type": "object",
+            "properties": {
+              "color": { "$ref": "#/definitions/color" },
+              "material": { "type": "string" },
+              "texture": { "type": "string" }
+            }
+          },
+          "forensic_attributes": {
+            "type": "object",
+            "properties": {
+              "face_shape": { "type": "string", "enum": ["oval", "round", "square", "heart", "diamond", "oblong"] },
+              "interpupillary_distance_mm": { "type": "number", "minimum": 50, "maximum": 80 },
+              "unique_marks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "position": { "type": "string" },
+                    "size_mm": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "avatar_attributes": {
+            "type": "object",
+            "properties": {
+              "body_type": { "type": "string", "enum": ["ectomorph", "mesomorph", "endomorph"] },
+              "facial_features": {
+                "type": "object",
+                "properties": {
+                  "eye_size": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "jaw_strength": { "type": "number", "minimum": 0, "maximum": 1 }
+                }
+              },
+              "cosmetic_modifications": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string", "enum": ["cyberware", "tattoo", "implant"] },
+                    "location": { "type": "string" },
+                    "glowing": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "biometric_data": {
+            "type": "object",
+            "properties": {
+              "facial_landmarks": {
+                "type": "object",
+                "properties": {
+                  "pupillary_distance_mm": { "type": "number" },
+                  "bizygomatic_width_mm": { "type": "number" }
+                }
+              },
+              "demographic_estimates": {
+                "type": "object",
+                "properties": {
+                  "biological_sex": { "type": "string", "enum": ["male", "female", "unknown"] },
+                  "age_estimate": { "type": "object" }
+                }
+              },
+              "privacy_flags": {
+                "type": "object",
+                "properties": {
+                  "encryption_required": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          },
+          "state": {
+            "type": "object",
+            "properties": {
+              "expression": { "type": "string", "enum": ["neutral", "happy", "sad", "angry"] },
+              "action": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "from", "to"],
+        "properties": {
+          "type": { "type": "string", "enum": ["distance", "angle", "relative_position"] },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "value": { "type": ["number", "string"] },
+          "unit": { "type": "string" }
+        }
+      }
+    },
+    "edge_reference": {
+      "type": "object",
+      "properties": {
+        "use_as_control": { "type": "boolean", "default": true },
+        "file_name": { "type": "string" },
+        "canny_thresholds": {
+          "type": "object",
+          "properties": {
+            "low": { "type": "integer", "minimum": 0, "maximum": 255, "default": 100 },
+            "high": { "type": "integer", "minimum": 0, "maximum": 255, "default": 200 }
+          }
+        }
+      }
+    },
+    "cross_domain_mappings": {
+      "type": "object",
+      "properties": {
+        "gaming_standards": {
+          "type": "object",
+          "properties": {
+            "vrm_compatible": { "type": "boolean" },
+            "unreal_metahuman": { "type": "boolean" }
+          }
+        },
+        "biometric_standards": {
+          "type": "object",
+          "properties": {
+            "iso_19794_5": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "ai_models": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["stable-diffusion", "dall-e", "midjourney", "flux"]
+        }
+      }
+    }
+  }
+}
+</code></pre>
+      </details>
+    </section>
+
+    <section>
+      <h2>12. Verweis: Engine</h2>
+      <p>UIN ist die Sprache. Die Ausführung erfolgt in der Engine <a href="https://github.com/z3uss3l/uin-ngin">uin‑ngin</a> (<span class="badge">separates Repo</span>).</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>UIN v0.7 – Technische Spezifikation • © 2025</p>
+  </footer>
+</body>
+</html>
