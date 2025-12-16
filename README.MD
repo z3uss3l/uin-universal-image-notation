@@ -50,7 +50,8 @@ UIN ist die **Sprache**.
 
 ## 🧪 Technische Spezifikation v0.7
 
-Die aktuelle Spezifikation ist im Repository unter `/docs/UINspecificationSchemaV07.json` verfügbar.  
+Die aktuelle Spezifikation ist im Repository unter `/docs/UINspecificationSchemaV07.json` verfügbar.
+*v0.7: ISO/IEC 19794-5 konforme biometrische Standards.  ✓ (steht)*
 Sie definiert alle Felder, Typen und Validierungsregeln für UIN‑Dateien.
 
 ### Validierung
@@ -68,10 +69,10 @@ pytest tests/ -v
 - Lesen Sie die Spezifikation (`/docs/UINspecificationSchemaV06.json`).  
 - Verwenden Sie UIN-Dateien als Bauplan für visuelle Inhalte.  
 - Für Ausführung, Tests und Benchmarks: nutzen Sie [uin-ngin](https://github.com/z3uss3l/uin-ngin).  
-
+```
 ---
 
 ## 📈 Roadmap
-- v0.7: ISO/IEC 19794-5 konforme biometrische Standards.  ✓ (steht)
+
 - Cross-Domain-Kompatibilität (CAD, DICOM, Geospatial).  
 - Gaming/Avatare (VRM, Unreal Engine, Ready Player Me).
