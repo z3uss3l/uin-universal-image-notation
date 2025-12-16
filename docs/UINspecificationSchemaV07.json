@@ -1,0 +1,541 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/z3uss3l/uin-universal-image-notation/schemas/v0.7.json",
+  "title": "Universal Image Notation (UIN) v0.7",
+  "description": "Standardisierte Bildbeschreibung für Forensik, Gaming-Avatare, Biometrie und KI-Generierung",
+  "type": "object",
+  "required": ["version", "canvas", "objects"],
+  "definitions": {
+    "vector3": {
+      "type": "object",
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number", "minimum": 0 },
+        "unit": { "type": "string", "enum": ["mm", "cm", "m", "px", "%", "ratio"] },
+        "tolerance": { "type": "number", "minimum": 0 }
+      }
+    },
+    "color": {
+      "oneOf": [
+        { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$" },
+        {
+          "type": "object",
+          "properties": {
+            "rgb": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 4 },
+            "hsl": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+            "name": { "type": "string" }
+          }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "version": { "type": "string", "const": "0.7" },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "author": { "type": "string" },
+        "created": { "type": "string", "format": "date-time" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "canvas": {
+      "type": "object",
+      "required": ["aspect_ratio", "bounds"],
+      "properties": {
+        "aspect_ratio": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" },
+        "bounds": {
+          "type": "object",
+          "required": ["x", "y", "z"],
+          "properties": {
+            "x": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+            "y": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+            "z": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
+          }
+        },
+        "coordinate_system": {
+          "type": "string",
+          "enum": ["world_space_meters", "normalized_0_1", "pixel_absolute"],
+          "default": "world_space_meters"
+        }
+      }
+    },
+    "global": {
+      "type": "object",
+      "properties": {
+        "lighting": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "enum": ["studio", "golden_hour", "overcast", "night"] },
+            "intensity": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "style": {
+          "type": "object",
+          "properties": {
+            "genre": { "type": "string", "enum": ["photorealistic", "painting", "cyberpunk", "anime"] }
+          }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "position"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+          "type": { "type": "string" },
+          "subtype": { "type": "string" },
+          "position": {
+            "type": "object",
+            "required": ["x", "y", "z"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "z": { "type": "number" },
+              "anchor": {
+                "type": "string",
+                "enum": ["center", "feet", "head", "top_left"],
+                "default": "center"
+              }
+            }
+          },
+          "rotation": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number", "minimum": -180, "maximum": 180 },
+              "y": { "type": "number", "minimum": -180, "maximum": 180 },
+              "z": { "type": "number", "minimum": -180, "maximum": 180 }
+            }
+          },
+          "measurements": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/definitions/measurement" }
+          },
+          "features": {
+            "type": "object",
+            "properties": {
+              "color": { "$ref": "#/definitions/color" },
+              "material": { "type": "string" },
+              "texture": { "type": "string" }
+            }
+          },
+          "forensic_attributes": {
+            "type": "object",
+            "properties": {
+              "face_shape": { "type": "string", "enum": ["oval", "round", "square", "heart", "diamond", "oblong"] },
+              "interpupillary_distance_mm": { "type": "number", "minimum": 50, "maximum": 80 },
+              "unique_marks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "position": { "type": "string" },
+                    "size_mm": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "avatar_attributes": {
+            "type": "object",
+            "properties": {
+              "body_type": { "type": "string", "enum": ["ectomorph", "mesomorph", "endomorph"] },
+              "facial_features": {
+                "type": "object",
+                "properties": {
+                  "eye_size": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "jaw_strength": { "type": "number", "minimum": 0, "maximum": 1 }
+                }
+              },
+              "cosmetic_modifications": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string", "enum": ["cyberware", "tattoo", "implant"] },
+                    "location": { "type": "string" },
+                    "glowing": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "biometric_data": {
+            "type": "object",
+            "properties": {
+              "facial_landmarks": {
+                "type": "object",
+                "properties": {
+                  "pupillary_distance_mm": { "type": "number" },
+                  "bizygomatic_width_mm": { "type": "number" }
+                }
+              },
+              "demographic_estimates": {
+                "type": "object",
+                "properties": {
+                  "biological_sex": { "type": "string", "enum": ["male", "female", "unknown"] },
+                  "age_estimate": { "type": "object" }
+                }
+              },
+              "privacy_flags": {
+                "type": "object",
+                "properties": {
+                  "encryption_required": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          },
+          "state": {
+            "type": "object",
+            "properties": {
+              "expression": { "type": "string", "enum": ["neutral", "happy", "sad", "angry"] },
+              "action": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "from", "to"],
+        "properties": {
+          "type": { "type": "string", "enum": ["distance", "angle", "relative_position"] },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "value": { "type": ["number", "string"] },
+          "unit": { "type": "string" }
+        }
+      }
+    },
+    "edge_reference": {
+      "type": "object",
+      "properties": {
+        "use_as_control": { "type": "boolean", "default": true },
+        "file_name": { "type": "string" },
+        "canny_thresholds": {
+          "type": "object",
+          "properties": {
+            "low": { "type": "integer", "minimum": 0, "maximum": 255, "default": 100 },
+            "high": { "type": "integer", "minimum": 0, "maximum": 255, "default": 200 }
+          }
+        }
+      }
+    },
+    "cross_domain_mappings": {
+      "type": "object",
+      "properties": {
+        "gaming_standards": {
+          "type": "object",
+          "properties": {
+            "vrm_compatible": { "type": "boolean" },
+            "unreal_metahuman": { "type": "boolean" }
+          }
+        },
+        "biometric_standards": {
+          "type": "object",
+          "properties": {
+            "iso_19794_5": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "ai_models": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["stable-diffusion", "dall-e", "midjourney", "flux"]
+        }
+      }
+    }
+  }
+}{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/z3uss3l/uin-universal-image-notation/schemas/v0.7.json",
+  "title": "Universal Image Notation (UIN) v0.7",
+  "description": "Standardisierte Bildbeschreibung für Forensik, Gaming-Avatare, Biometrie und KI-Generierung",
+  "type": "object",
+  "required": ["version", "canvas", "objects"],
+  "definitions": {
+    "vector3": {
+      "type": "object",
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number", "minimum": 0 },
+        "unit": { "type": "string", "enum": ["mm", "cm", "m", "px", "%", "ratio"] },
+        "tolerance": { "type": "number", "minimum": 0 }
+      }
+    },
+    "color": {
+      "oneOf": [
+        { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$" },
+        {
+          "type": "object",
+          "properties": {
+            "rgb": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 4 },
+            "hsl": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+            "name": { "type": "string" }
+          }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "version": { "type": "string", "const": "0.7" },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "author": { "type": "string" },
+        "created": { "type": "string", "format": "date-time" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "canvas": {
+      "type": "object",
+      "required": ["aspect_ratio", "bounds"],
+      "properties": {
+        "aspect_ratio": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" },
+        "bounds": {
+          "type": "object",
+          "required": ["x", "y", "z"],
+          "properties": {
+            "x": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+            "y": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+            "z": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
+          }
+        },
+        "coordinate_system": {
+          "type": "string",
+          "enum": ["world_space_meters", "normalized_0_1", "pixel_absolute"],
+          "default": "world_space_meters"
+        }
+      }
+    },
+    "global": {
+      "type": "object",
+      "properties": {
+        "lighting": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "enum": ["studio", "golden_hour", "overcast", "night"] },
+            "intensity": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "style": {
+          "type": "object",
+          "properties": {
+            "genre": { "type": "string", "enum": ["photorealistic", "painting", "cyberpunk", "anime"] }
+          }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "position"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+          "type": { "type": "string" },
+          "subtype": { "type": "string" },
+          "position": {
+            "type": "object",
+            "required": ["x", "y", "z"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "z": { "type": "number" },
+              "anchor": {
+                "type": "string",
+                "enum": ["center", "feet", "head", "top_left"],
+                "default": "center"
+              }
+            }
+          },
+          "rotation": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number", "minimum": -180, "maximum": 180 },
+              "y": { "type": "number", "minimum": -180, "maximum": 180 },
+              "z": { "type": "number", "minimum": -180, "maximum": 180 }
+            }
+          },
+          "measurements": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/definitions/measurement" }
+          },
+          "features": {
+            "type": "object",
+            "properties": {
+              "color": { "$ref": "#/definitions/color" },
+              "material": { "type": "string" },
+              "texture": { "type": "string" }
+            }
+          },
+          "forensic_attributes": {
+            "type": "object",
+            "properties": {
+              "face_shape": { "type": "string", "enum": ["oval", "round", "square", "heart", "diamond", "oblong"] },
+              "interpupillary_distance_mm": { "type": "number", "minimum": 50, "maximum": 80 },
+              "unique_marks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "position": { "type": "string" },
+                    "size_mm": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "avatar_attributes": {
+            "type": "object",
+            "properties": {
+              "body_type": { "type": "string", "enum": ["ectomorph", "mesomorph", "endomorph"] },
+              "facial_features": {
+                "type": "object",
+                "properties": {
+                  "eye_size": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "jaw_strength": { "type": "number", "minimum": 0, "maximum": 1 }
+                }
+              },
+              "cosmetic_modifications": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string", "enum": ["cyberware", "tattoo", "implant"] },
+                    "location": { "type": "string" },
+                    "glowing": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "biometric_data": {
+            "type": "object",
+            "properties": {
+              "facial_landmarks": {
+                "type": "object",
+                "properties": {
+                  "pupillary_distance_mm": { "type": "number" },
+                  "bizygomatic_width_mm": { "type": "number" }
+                }
+              },
+              "demographic_estimates": {
+                "type": "object",
+                "properties": {
+                  "biological_sex": { "type": "string", "enum": ["male", "female", "unknown"] },
+                  "age_estimate": { "type": "object" }
+                }
+              },
+              "privacy_flags": {
+                "type": "object",
+                "properties": {
+                  "encryption_required": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          },
+          "state": {
+            "type": "object",
+            "properties": {
+              "expression": { "type": "string", "enum": ["neutral", "happy", "sad", "angry"] },
+              "action": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "from", "to"],
+        "properties": {
+          "type": { "type": "string", "enum": ["distance", "angle", "relative_position"] },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "value": { "type": ["number", "string"] },
+          "unit": { "type": "string" }
+        }
+      }
+    },
+    "edge_reference": {
+      "type": "object",
+      "properties": {
+        "use_as_control": { "type": "boolean", "default": true },
+        "file_name": { "type": "string" },
+        "canny_thresholds": {
+          "type": "object",
+          "properties": {
+            "low": { "type": "integer", "minimum": 0, "maximum": 255, "default": 100 },
+            "high": { "type": "integer", "minimum": 0, "maximum": 255, "default": 200 }
+          }
+        }
+      }
+    },
+    "cross_domain_mappings": {
+      "type": "object",
+      "properties": {
+        "gaming_standards": {
+          "type": "object",
+          "properties": {
+            "vrm_compatible": { "type": "boolean" },
+            "unreal_metahuman": { "type": "boolean" }
+          }
+        },
+        "biometric_standards": {
+          "type": "object",
+          "properties": {
+            "iso_19794_5": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "ai_models": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["stable-diffusion", "dall-e", "midjourney", "flux"]
+        }
+      }
+    }
+  }
+    }
