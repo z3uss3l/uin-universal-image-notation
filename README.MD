@@ -1,4 +1,5 @@
-in# Universal Image Notation (UIN)
+![uin logo](uin-logo.png) 
+# Universal Image Notation (UIN)
 
 UIN ist eine präzise, messbare und reversible **Beschreibungssprache** für visuelle Inhalte.  
 Sie definiert, *was* ein Bild ist – nicht *wie* es erzeugt wird.  
